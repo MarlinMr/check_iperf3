@@ -38,8 +38,6 @@ A Nagios-compatible Python plugin for **LibreNMS** designed to monitor network t
 4.  **RRD Note:** If you change the number of metrics (e.g., switching from TCP to UDP) or change the labels, you **must** delete the existing `.rrd` file for this service to allow LibreNMS to recreate the database structure.
     *   Path: `/opt/librenms/rrd/<device_name>/services-<service_id>.rrd`
 
-### **Arguments Table**
-```markdown
 ## 📖 Usage
 
 ### Arguments
