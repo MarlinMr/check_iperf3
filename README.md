@@ -22,8 +22,8 @@ A Nagios-compatible Python plugin for **LibreNMS** designed to monitor network t
 
 1.  Place the script in your LibreNMS plugins directory:
     ```bash
-    cp check_iperf3.py /usr/lib/monitoring-plugins/check_iperf3.py
-    chmod +x /usr/lib/monitoring-plugins/check_iperf3.py
+    cp check_iperf3.py /data/monitoring-plugins/check_iperf3.py
+    chmod +x /data/monitoring-plugins/check_iperf3.py
 
 2.  Test the script from the command line:
     ```bash
@@ -44,18 +44,18 @@ A Nagios-compatible Python plugin for **LibreNMS** designed to monitor network t
 
 | Flag | Name | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `-H` | `--host` | **Required.** IP or Hostname of the iperf3 server. | N/A |
+| `-H` | `--host` | **Required.** IP or Hostname of the iperf3 server. | |
 | `-p` | `--port` | Port of the iperf3 server. | 5201 |
 | `-t` | `--time` | Duration of the test in seconds. | 10 |
 | `-P` | `--parallel` | Number of parallel client streams. | 1 |
 | `-d` | `--direction` | Traffic flow: `send`, `receive`, or `bidir`. | send |
-| `-u` | `--udp` | Use UDP instead of TCP. | False |
-| `-b` | `--bandwidth` | Target bandwidth in Mbps (Required for UDP). | N/A |
-| `-D` | `--dont-fragment` | Set the IPv4 Don't Fragment (DF) bit. | False |
+| `-u` | `--udp` | Use UDP instead of TCP. | `False` |
+| `-b` | `--bandwidth` | Target bandwidth in Mbps (Required for UDP). | |
+| `-D` | `--dont-fragment` | Set the IPv4 Don't Fragment (DF) bit. | `False` |
 | `-w` | `--warning` | Warning threshold in Mbps (Alerts if below). | 750 |
 | `-c` | `--critical` | Critical threshold in Mbps (Alerts if below). | 500 |
 | `-m` | `--min` | Minimum value for the graph Y-axis. | 0 |
-| `-M` | `--max` | Maximum value for the graph Y-axis (optional). | None |
+| `-M` | `--max` | Maximum value for the graph Y-axis. | |
 
 ## ⚠️ Known Limitations
 The `iperf3-python` library is a wrapper for the iperf3 C library. If you receive an **UNKNOWN** status regarding `bidir` or `dont_fragment`, please ensure your Python library and system iperf3 versions are up to date.
