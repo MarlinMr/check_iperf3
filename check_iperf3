@@ -45,14 +45,14 @@ def run_iperf_test(server_ip, duration, port, streams, direction, is_udp, bandwi
         jitter = getattr(result, 'jitter_ms', 0) or 0
         loss = getattr(result, 'lost_percent', 0) or 0
         retries = getattr(result, 'retransmits', 0) or 0
-        
+
         perf_data = f"Received_bps={received:.2f};{warn_bps};{crit_bps};0;{max_str} Sent_bps={sent:.2f};{warn_bps};{crit_bps};0;{max_str} Jitter_ms={jitter:.2f};;;; Loss_Percent={loss:.2f};;;; Retries={retries};;;;"
 
         if received < crit_bps:
-            print(f"IPERF3 CRITICAL - {received / 1_000_000:.2f} Mbps | {perf_data}")
+            print(f"IPERF3 CRITICAL - RX: {received / 1_000_000:.2f} Mbps | {perf_data}")
             sys.exit(2)
         elif received < warn_bps:
-            print(f"IPERF3 WARNING - {received / 1_000_000:.2f} Mbps | {perf_data}")
+            print(f"IPERF3 WARNING - RX: {received / 1_000_000:.2f} Mbps | {perf_data}")
             sys.exit(1)
         else:
             print(f"IPERF3 OK - RX: {received / 1_000_000:.2f} Mbps | {perf_data}")
