@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+import iperf3
+import argparse
+import sys
+
+def run_iperf_test(server_ip, duration, port, streams, direction, is_udp, bandwidth_mbps, dont_fragment, warn_mbps, crit_mbps, min_val, max_mbps):
+    client = iperf3.Client()
+    client.server_hostname = server_ip
+    client.duration = duration
+    client.port = port
+    client.num_streams = streams
+
+    if direction == "receive":
+        client.reverse = True
+    elif direction == "bidir":
+        if hasattr(client, 'bidir'):
+            client.bidir = True
+        else:
+            sys.exit(3)
+
+    if is_udp:
+        client.protocol = 'udp'
+    if bandwidth_mbps:
+        client.bandwidth = bandwidth_mbps * 1_000_000
+
+    if dont_fragment and hasattr(client, 'dont_fragment'):
+        client.dont_fragment = True
+
+    warn_bps = warn_mbps * 1_000_000
+    crit_bps = crit_mbps * 1_000_000
+    max_str = f"{max_mbps * 1_000_000}" if max_mbps is not None else ""
+
+    try:
+        result = client.run()
+    except Exception:
+        print(f"IPERF3 CRITICAL | Received_bps=0;{warn_bps};{crit_bps};0;{max_str} Sent_bps=0;{warn_bps};{crit_bps};0;{max_str} Jitter_ms=0;;;; Loss_Percent=0;;;; Retries=0;;;;")
+        sys.exit(2)
+
+    if result.error:
+        print(f"IPERF3 WARNING - {result.error} | Received_bps=0;{warn_bps};{crit_bps};0;{max_str} Sent_bps=0;{warn_bps};{crit_bps};0;{max_str} Jitter_ms=0;;;; Loss_Percent=0;;;; Retries=0;;;;")
+        sys.exit(1)
+    else:
+        sent = result.sent_bps
+        received = result.received_bps
+        jitter = getattr(result, 'jitter_ms', 0) or 0
+        loss = getattr(result, 'lost_percent', 0) or 0
+        retries = getattr(result, 'retransmits', 0) or 0
+        
+        perf_data = f"Received_bps={received:.2f};{warn_bps};{crit_bps};0;{max_str} Sent_bps={sent:.2f};{warn_bps};{crit_bps};0;{max_str} Jitter_ms={jitter:.2f};;;; Loss_Percent={loss:.2f};;;; Retries={retries};;;;"
+
+        if received < crit_bps:
+            print(f"IPERF3 CRITICAL - {received / 1_000_000:.2f} Mbps | {perf_data}")
+            sys.exit(2)
+        else:
+            print(f"IPERF3 OK - RX: {received / 1_000_000:.2f} Mbps | {perf_data}")
+            sys.exit(0)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-H", "--host", required=True)
+    parser.add_argument("-p", "--port", type=int, default=5201)
+    parser.add_argument("-t", "--time", type=int, default=10)
+    parser.add_argument("-P", "--parallel", type=int, default=1)
+    parser.add_argument("-d", "--direction", choices=["send", "receive", "bidir"], default="send")
+    parser.add_argument("-u", "--udp", action="store_true")
+    parser.add_argument("-b", "--bandwidth", type=int)
+    parser.add_argument("-D", "--dont-fragment", action="store_true")
+    parser.add_argument("-w", "--warning", type=int, default=750)
+    parser.add_argument("-c", "--critical", type=int, default=500)
+    parser.add_argument("-m", "--min", type=int, default=0)
+    parser.add_argument("-M", "--max", type=int)
+    args = parser.parse_args()
+    run_iperf_test(args.host, args.time, args.port, args.parallel, args.direction, args.udp, args.bandwidth, args.dont_fragment, args.warning, args.critical, args.min, args.max)
