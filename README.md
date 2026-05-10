@@ -22,18 +22,18 @@ A Nagios-compatible Python plugin for **LibreNMS** designed to monitor network t
 
 1.  Place the script in your LibreNMS plugins directory:
     ```bash
-    cp check_iperf3.py /data/monitoring-plugins/check_iperf3.py
-    chmod +x /data/monitoring-plugins/check_iperf3.py
+    cp check_iperf3 /data/monitoring-plugins/check_iperf3
+    chmod +x /data/monitoring-plugins/check_iperf3
 
 2.  Test the script from the command line:
     ```bash
-    /usr/lib/nagios/plugins/check_iperf3.py -H <server_ip> -w 750 -c 500
+    /usr/lib/nagios/plugins/check_iperf3 -H <server_ip> -w 750 -c 500
     ```
 
 ## 📊 LibreNMS Integration
 
 1.  In the LibreNMS Web UI, go to **Device** -> **Services** -> **Add Service**.
-2.  **Service Type:** Select `check_iperf3.py` (ensure it is in the plugins directory).
+2.  **Service Type:** Select `check_iperf3` (ensure it is in the plugins directory).
 3.  **Parameters:** Add your desired flags, e.g., `-H 192.168.1.10 -u -b 1000 -w 900 -c 800`.
 4.  **RRD Note:** If you change the number of metrics (e.g., switching from TCP to UDP) or change the labels, you **must** delete the existing `.rrd` file for this service to allow LibreNMS to recreate the database structure.
     *   Path: `/opt/librenms/rrd/<device_name>/services-<service_id>.rrd`
