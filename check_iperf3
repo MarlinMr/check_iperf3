@@ -10,18 +10,18 @@ def run_iperf_test(server_ip, duration, port, streams, direction, is_udp, bandwi
     client.port = port
     client.num_streams = streams
 
-    if direction == "receive":
-        client.reverse = True
-    elif direction == "bidir":
-        if hasattr(client, 'bidir'):
-            client.bidir = True
-        else:
-            sys.exit(3)
+#    if direction == "receive":
+#        client.reverse = True
+#    elif direction == "bidir":
+#        if hasattr(client, 'bidir'):
+#            client.bidir = True
+#        else:
+#            sys.exit(3)
 
-    if is_udp:
-        client.protocol = 'udp'
-    if bandwidth_mbps:
-        client.bandwidth = bandwidth_mbps * 1_000_000
+#    if is_udp:
+#        client.protocol = 'udp'
+#    if bandwidth_mbps:
+#        client.bandwidth = bandwidth_mbps * 1_000_000
 
     if dont_fragment and hasattr(client, 'dont_fragment'):
         client.dont_fragment = True
@@ -64,9 +64,9 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--port", type=int, default=5201)
     parser.add_argument("-t", "--time", type=int, default=10)
     parser.add_argument("-P", "--parallel", type=int, default=1)
-    parser.add_argument("-d", "--direction", choices=["send", "receive", "bidir"], default="send")
-    parser.add_argument("-u", "--udp", action="store_true")
-    parser.add_argument("-b", "--bandwidth", type=int)
+#    parser.add_argument("-d", "--direction", choices=["send", "receive", "bidir"], default="send")
+#    parser.add_argument("-u", "--udp", action="store_true")
+#    parser.add_argument("-b", "--bandwidth", type=int)
     parser.add_argument("-D", "--dont-fragment", action="store_true")
     parser.add_argument("-w", "--warning", type=int, default=750)
     parser.add_argument("-c", "--critical", type=int, default=500)
